@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Shift | Master Your Habits</title>
+    <title>Shift | Transform Your Habits</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
@@ -12,81 +12,93 @@
         <div class="pwa-banner">
             <span class="pwa-icon">📱</span>
             <div class="pwa-text">
-                <strong>Install App:</strong> Tap your browser menu (<span class="browser-icon">⋮</span> or <span class="browser-icon">⎙</span>) and select <strong>"Add to Home Screen"</strong> for app-like access.
+                <strong>Quick Access:</strong> Tap your browser menu (<span class="browser-icon">⋮</span> or <span class="browser-icon">⎙</span>) and select <strong>"Add to Home Screen"</strong>.
             </div>
         </div>
 
         <header class="app-header">
             <h1>Shift</h1>
-            <p class="tagline">Rewrite your patterns, one mindful moment at a time.</p>
+            <p class="tagline">Rewrite your patterns, one simple step at a time.</p>
         </header>
 
-        <!-- Setup / Baseline Banner with Core "Why" Statement -->
+        <!-- Setup / Baseline Form -->
         <section id="setup-section" class="card setup-card">
-            <h2>Welcome to Your Journey</h2>
-            <p>Let's ground your intention before you begin.</p>
+            <h2>Welcome</h2>
+            <p>What habit or behavior would you like to shift?</p>
             
             <div class="input-group">
-                <label for="habit-name">What habit are you stepping away from?</label>
-                <input type="text" id="habit-name" placeholder="e.g., Smoking">
+                <label for="habit-name">Habit or behavior to change</label>
+                <input type="text" id="habit-name" placeholder="e.g., Staying up late, scrolling, snacking...">
 
-                <label for="daily-cost">What is the estimated daily cost? ($)</label>
-                <input type="number" id="daily-cost" placeholder="e.g., 10">
+                <label for="daily-cost">Estimated daily money spent ($) <span class="optional-text">(leave blank or 0 if it costs no money)</span></label>
+                <input type="number" id="daily-cost" placeholder="e.g., 0">
 
-                <label for="core-why">Your Core "Why": Why do you want to make this change for yourself?</label>
-                <textarea id="core-why" rows="3" placeholder="e.g., To reclaim my health, energy, and freedom..."></textarea>
+                <label for="core-why">Your personal reason: Why do you want to make this change?</label>
+                <textarea id="core-why" rows="3" placeholder="e.g., To feel rested, have more energy, and take care of myself..."></textarea>
 
-                <button id="save-baseline">Initialize Shift</button>
+                <button id="save-baseline">Start My Journey</button>
             </div>
         </section>
 
         <!-- Main Dashboard (Hidden until initialized) -->
         <main id="main-dashboard" class="dashboard-hidden">
             <!-- Core "Why" Reminder Banner -->
-            <section class="card why-banner" style="background: #f0fdf4; border-left: 4px solid var(--primary);">
-                <h2 style="font-size: 0.9rem; text-transform: uppercase; letter-spacing: 0.5px; color: var(--text-muted); margin-bottom: 0.3rem;">Your Anchor / Core Why</h2>
-                <p id="displayed-why" style="font-style: italic; color: var(--primary); margin: 0; font-size: 0.95rem;"></p>
+            <section class="card why-banner">
+                <h2>Your Main Goal</h2>
+                <p id="displayed-why"></p>
             </section>
 
             <!-- Progress Overview -->
             <section class="card progress-card">
                 <h2>Your Progress</h2>
-                <div class="stats-grid">
-                    <div class="stat-box">
-                        <span class="stat-label">Money Saved</span>
-                        <span id="money-saved" class="stat-value">$0.00</span>
-                    </div>
-                    <div class="stat-box">
-                        <span class="stat-label">Urges Surfed</span>
-                        <span id="urges-count" class="stat-value">0</span>
-                    </div>
+                <div class="stats-grid" id="stats-grid-container">
+                    <!-- Dynamically populated -->
                 </div>
             </section>
 
             <!-- Daily Check-In -->
             <section class="card">
                 <h2>Daily Check-In</h2>
-                <label for="stress-level">How heavy is your mental load right now? (<span id="stress-val">5</span>/10)</label>
+                <label for="stress-level">How stressed or overwhelmed do you feel right now? (<span id="stress-val">5</span>/10)</label>
                 <input type="range" id="stress-level" min="1" max="10" value="5">
-                <button id="save-checkin" class="secondary-btn">Log State</button>
+                <button id="save-checkin" class="secondary-btn">Save Check-In</button>
             </section>
 
-            <!-- Urge Surfing Zone -->
+            <!-- Pattern Interruption Zone -->
             <section class="card highlight-card">
-                <h2>Urge Surfing Zone</h2>
-                <p class="section-desc">Cravings peak like waves. Choose a tool to ride it out:</p>
+                <h2>Need Help Right Now?</h2>
+                <p class="section-desc">Pick an easy exercise to clear your mind and let the urge pass:</p>
                 
                 <div class="game-selector">
-                    <button class="game-btn active-tab" data-game="breathe">Breathe Wave</button>
-                    <button class="game-btn" data-game="grounding">5-4-3-2-1 Grounding</button>
-                    <button class="game-btn" data-game="focus-game">Focus Tap Game</button>
+                    <button class="game-btn active-tab" data-game="breathe">Breathe</button>
+                    <button class="game-btn" data-game="grounding">Look Around</button>
+                    <button class="game-btn" data-game="cbt">Change Thought</button>
+                    <button class="game-btn" data-game="focus-game">Tap Focus</button>
                 </div>
 
-                <div id="game-container" class="game-box">
-                    <p>Select an exercise above to disrupt the craving loop.</p>
+                <div class="launch-exercise-container">
+                    <button id="launch-exercise-btn">Open Exercise Full Screen</button>
+                </div>
+            </section>
+
+            <!-- Pattern Insights -->
+            <section class="card">
+                <h2>Your Insights</h2>
+                <div id="insights-content" style="font-size: 0.9rem; color: var(--text-muted);">
+                    Log your check-ins and urge habits to see how stress affects your patterns over time.
                 </div>
             </section>
         </main>
+    </div>
+
+    <!-- Distraction-Free Full Screen Exercise Overlay -->
+    <div id="exercise-overlay" class="exercise-overlay-hidden">
+        <div class="overlay-content">
+            <button id="close-overlay">✕ Back to Dashboard</button>
+            <div id="overlay-game-container" class="overlay-game-box">
+                <!-- Active Exercise Renders Here -->
+            </div>
+        </div>
     </div>
 
     <script src="script.js"></script>

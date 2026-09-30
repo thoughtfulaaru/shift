@@ -28,7 +28,6 @@ body {
     box-sizing: border-box;
 }
 
-/* PWA Add to Home Screen Banner */
 .pwa-banner {
     background: #ffffff;
     border: 1px solid #e2e8f0;
@@ -76,7 +75,6 @@ body {
     color: var(--primary);
     margin: 0;
     font-weight: 800;
-    letter-spacing: -0.5px;
 }
 
 .tagline {
@@ -101,11 +99,30 @@ body {
     margin-bottom: 0.75rem;
 }
 
+.why-banner {
+    background: #f0fdf4; 
+    border-left: 4px solid var(--primary);
+}
+
+.why-banner h2 {
+    font-size: 0.8rem; 
+    text-transform: uppercase; 
+    letter-spacing: 0.5px; 
+    color: var(--text-muted); 
+    margin-bottom: 0.3rem;
+}
+
+.why-banner p {
+    font-style: italic; 
+    color: var(--primary); 
+    margin: 0; 
+    font-size: 0.95rem;
+}
+
 .dashboard-hidden {
     display: none;
 }
 
-/* Setup Card */
 .setup-card input, .setup-card textarea {
     width: 100%;
     padding: 0.75rem;
@@ -121,7 +138,12 @@ body {
     resize: vertical;
 }
 
-/* Stats Layout */
+.optional-text {
+    font-size: 0.8rem;
+    color: var(--text-muted);
+    font-weight: normal;
+}
+
 .stats-grid {
     display: grid;
     grid-template-columns: 1fr 1fr;
@@ -138,7 +160,7 @@ body {
 
 .stat-label {
     display: block;
-    font-size: 0.8rem;
+    font-size: 0.75rem;
     color: var(--text-muted);
     text-transform: uppercase;
     letter-spacing: 0.5px;
@@ -146,12 +168,11 @@ body {
 }
 
 .stat-value {
-    font-size: 1.4rem;
+    font-size: 1.3rem;
     font-weight: 700;
     color: var(--primary);
 }
 
-/* Controls & Inputs */
 label {
     display: block;
     font-size: 0.9rem;
@@ -195,7 +216,6 @@ button:active {
     border: 2px solid var(--accent);
 }
 
-/* Game Zone */
 .section-desc {
     font-size: 0.9rem;
     color: var(--text-muted);
@@ -204,16 +224,19 @@ button:active {
 
 .game-selector {
     display: flex;
-    gap: 0.4rem;
+    gap: 0.3rem;
     margin-bottom: 1rem;
+    flex-wrap: wrap;
 }
 
 .game-btn {
     background: #e2e8f0;
     color: var(--text-main);
-    font-size: 0.8rem;
-    padding: 0.5rem;
+    font-size: 0.75rem;
+    padding: 0.4rem 0.6rem;
     border-radius: 6px;
+    flex: 1;
+    min-width: 70px;
 }
 
 .game-btn.active-tab {
@@ -221,23 +244,64 @@ button:active {
     color: white;
 }
 
-.game-box {
-    background: #f8fafc;
-    padding: 1.5rem 1rem;
-    border-radius: 12px;
+.launch-exercise-container {
+    margin-top: 0.5rem;
+}
+
+/* Distraction-Free Full Screen Overlay Styles */
+.exercise-overlay-hidden {
+    display: none;
+}
+
+.exercise-overlay-active {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: rgba(15, 23, 42, 0.95);
+    z-index: 1000;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 1.5rem;
+    box-sizing: border-box;
+}
+
+.overlay-content {
+    width: 100%;
+    max-width: 420px;
     text-align: center;
-    min-height: 140px;
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+#close-overlay {
+    background: #334155;
+    color: #fff;
+    font-size: 0.85rem;
+    padding: 0.5rem 1rem;
+    border-radius: 8px;
+    width: auto;
+    align-self: center;
+}
+
+.overlay-game-box {
+    background: #ffffff;
+    padding: 2rem 1.5rem;
+    border-radius: 16px;
+    min-height: 280px;
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    border: 1px dashed #cbd5e1;
+    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.2);
 }
 
-/* Focus Game Specifics */
 .target-dot {
-    width: 45px;
-    height: 45px;
+    width: 50px;
+    height: 50px;
     background: var(--primary);
     border-radius: 50%;
     cursor: pointer;
