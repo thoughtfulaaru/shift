@@ -1,20 +1,37 @@
-document.addEventListener("DOMContentLoaded", () => {
-  const form = document.querySelector("form");
-  if (!form) return;
+document.addEventListener('DOMContentLoaded', () => {
+  const submitButton = document.querySelector('#submit-btn'); // Update selector to match your button ID/class
 
-  form.addEventListener("submit", (e) => {
-    e.preventDefault();
+  if (submitButton) {
+    submitButton.addEventListener('click', async (e) => {
+      e.preventDefault();
 
-    const habitInput = form.querySelector('input[name="habit"]') || form.querySelector('input:nth-of-type(1)');
-    const reasonInput = form.querySelector('textarea[name="reason"]') || form.querySelector('textarea');
+      // Gather your input values here
+      const habitData = {
+        habit: document.querySelector('#habit-input')?.value || '',
+        cost: document.querySelector('#cost-input')?.value || 0
+      };
 
-    // Check if required fields (habit and reason) are filled
-    if (!habitInput.value.trim() || !reasonInput.value.trim()) {
-      alert("Please fill out all fields so we can personalize your journey.");
-      return;
-    }
+      try {
+        // Use a relative URL so it works seamlessly on Render and Localhost
+        const response = await fetch('/api/submit-shift', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify(habitData)
+        });
 
-    // Proceed with form submission or next steps
-    alert("Journey started successfully!");
-  });
+        const result = await response.json();
+        
+        if (response.ok) {
+          console.log('Success:', result);
+          // Add your UI success updates here (e.g., redirect or show success message)
+        } else {
+          console.error('Server error:', result.error);
+        }
+      } catch (error) {
+        console.error('Network or fetch error:', error);
+      }
+    });
+  }
 });
