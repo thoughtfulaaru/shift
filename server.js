@@ -26,7 +26,7 @@ app.post('/api/submit-shift', (req, res) => {
 
 // Fallback to serve index.html for single-page apps (if applicable)
 app.get('*', (req, res) => {
-  res.sendFile(path.join(__dirname, 'public', 'index.html'));
+  res.sendFile(path.join(__dirname, 'index.html'));
 });
 
 app.listen(PORT, () => {
