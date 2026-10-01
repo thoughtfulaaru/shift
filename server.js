@@ -25,8 +25,8 @@ app.post('/api/submit-shift', (req, res) => {
 });
 
 // Fallback to serve index.html for single-page apps (if applicable)
-app.get('*', (req, res) => {
-  res.sendFile(path.join(__dirname, 'index.html'));
+app.get(/.*/, (req, res) => {
+  res.sendFile(path.join(__dirname, 'public', 'index.html')); // Adjust path if your index.html is elsewhere
 });
 
 // Updated listen method with '0.0.0.0' for Render
