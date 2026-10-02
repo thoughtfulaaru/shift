@@ -1,4 +1,7 @@
-import { createClient } from '@supabase/supabase-js'
+// Import Supabase directly from a CDN so the browser can load it without a bundler
+import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm'
+
+console.log('Script loaded successfully!');
 
 // Replace these with your actual Supabase URL and Anon/Public Key from your Supabase project settings
 const supabaseUrl = 'https://orodgbfpamnyufkcrknp.supabase.co'
@@ -12,6 +15,7 @@ document.addEventListener('DOMContentLoaded', () => {
   if (submitButton) {
     submitButton.addEventListener('click', async (e) => {
       e.preventDefault();
+      console.log('Start My Journey button clicked!');
 
       const habitData = {
         habit: document.querySelector('#habit-name')?.value || '',
