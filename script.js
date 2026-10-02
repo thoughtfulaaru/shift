@@ -1,36 +1,39 @@
+import { createClient } from '@supabase/supabase-js'
+
+const supabaseUrl = import.meta.env.VITE_SUPABASE_URL
+const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY
+
+export const supabase = createClient(supabaseUrl, supabaseAnonKey)
+
 document.addEventListener('DOMContentLoaded', () => {
-  const submitButton = document.querySelector('#submit-btn'); // Update selector to match your button ID/class
+  const submitButton = document.querySelector('#save-baseline');
 
   if (submitButton) {
     submitButton.addEventListener('click', async (e) => {
       e.preventDefault();
 
-      // Gather your input values here
       const habitData = {
-        habit: document.querySelector('#habit-input')?.value || '',
-        cost: document.querySelector('#cost-input')?.value || 0
+        habit: document.querySelector('#habit-name')?.value || '',
+        cost: document.querySelector('#daily-cost')?.value || 0
       };
 
       try {
-        // Use a relative URL so it works seamlessly on Render and Localhost
-        const response = await fetch('/api/submit-shift', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json'
-          },
-          body: JSON.stringify(habitData)
-        });
+        const { data, error } = await supabase
+          .from('habits') 
+          .insert([habitData]);
 
-        const result = await response.json();
-        
-        if (response.ok) {
-          console.log('Success:', result);
-          // Add your UI success updates here (e.g., redirect or show success message)
-        } else {
-          console.error('Server error:', result.error);
+        if (error) {
+          throw error;
         }
+
+        console.log('Habit data saved:', data);
+        
+        // Optional: Hide setup and show dashboard once saved successfully
+        document.querySelector('#setup-section').classList.add('dashboard-hidden');
+        document.querySelector('#main-dashboard').classList.remove('dashboard-hidden');
+        
       } catch (error) {
-        console.error('Network or fetch error:', error);
+        console.error('Error saving data:', error.message);
       }
     });
   }
