@@ -24,7 +24,7 @@ document.addEventListener('DOMContentLoaded', () => {
       const habitData = {
         habit: habitInput,
         cost: Number(costInput),
-        core_why: whyInput // Adjust this key ('core_why' or 'why') to match your Supabase column name exactly!
+        why: whyInput // Change 'core_why' to match your actual column name in Supabase
       };
 
       console.log('Attempting to insert data into Supabase:', habitData);
