@@ -1,7 +1,8 @@
 import { createClient } from '@supabase/supabase-js'
 
-const supabaseUrl = import.meta.env.VITE_SUPABASE_URL
-const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY
+// Replace these with your actual Supabase URL and Anon/Public Key from your Supabase project settings
+const supabaseUrl = 'https://orodgbfpamnyufkcrknp.supabase.co'
+const supabaseAnonKey = 'sb_publishable_D5VMx6SOABgyv5Jp1jckHA_IWi2re76'
 
 export const supabase = createClient(supabaseUrl, supabaseAnonKey)
 
@@ -28,7 +29,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         console.log('Habit data saved:', data);
         
-        // Optional: Hide setup and show dashboard once saved successfully
+        // Hide setup and show dashboard once saved successfully
         document.querySelector('#setup-section').classList.add('dashboard-hidden');
         document.querySelector('#main-dashboard').classList.remove('dashboard-hidden');
         
