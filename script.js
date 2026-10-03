@@ -9,8 +9,13 @@ const supabaseAnonKey = 'sb_publishable_D5VMx6SOABgyv5Jp1jckHA_IWi2re76'
 
 const supabase = createClient(supabaseUrl, supabaseAnonKey)
 
+// Track currently selected exercise (default to 'breathe')
+let selectedExercise = 'breathe';
+
 document.addEventListener('DOMContentLoaded', () => {
+  // -------------------------------------------------------------
   // 1. Baseline Form Submission Logic
+  // -------------------------------------------------------------
   const submitButton = document.querySelector('#save-baseline');
 
   if (submitButton) {
@@ -42,8 +47,8 @@ document.addEventListener('DOMContentLoaded', () => {
         console.log('Habit data saved successfully:', data);
         
         // Hide setup and show dashboard once saved successfully
-        document.querySelector('#setup-section').classList.add('dashboard-hidden');
-        document.querySelector('#main-dashboard').classList.remove('dashboard-hidden');
+        document.querySelector('#setup-section')?.classList.add('dashboard-hidden');
+        document.querySelector('#main-dashboard')?.classList.remove('dashboard-hidden');
         
         // Populate the core why reminder banner
         const displayedWhy = document.querySelector('#displayed-why');
@@ -58,7 +63,9 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
+  // -------------------------------------------------------------
   // 2. Stress Level Slider Display
+  // -------------------------------------------------------------
   const stressSlider = document.querySelector('#stress-level');
   const stressVal = document.querySelector('#stress-val');
   if (stressSlider && stressVal) {
@@ -67,7 +74,9 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
+  // -------------------------------------------------------------
   // 3. Daily Check-In Button Handler
+  // -------------------------------------------------------------
   const saveCheckinBtn = document.querySelector('#save-checkin');
   if (saveCheckinBtn) {
     saveCheckinBtn.addEventListener('click', () => {
@@ -77,14 +86,54 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
-  // 4. Exercise Overlay Toggle Controls (with debugging logs)
+  // -------------------------------------------------------------
+  // 4. Exercise Tab Selection (Breathe, Look Around, Change Thought, Tap Focus)
+  // -------------------------------------------------------------
+  // Select all individual exercise picker buttons inside the card
+  const exerciseButtons = document.querySelectorAll('.exercise-card button, .game-btn, .exercise-tab, [data-game]');
+  
+  if (exerciseButtons.length > 0) {
+    exerciseButtons.forEach((btn) => {
+      // Skip the main launch button from being treated as a selector tab
+      if (btn.id === 'launch-exercise-btn' || btn.id === 'save-checkin' || btn.id === 'save-baseline') return;
+
+      btn.addEventListener('click', (e) => {
+        // Remove active state from other exercise buttons
+        exerciseButtons.forEach((b) => {
+          if (b.id !== 'launch-exercise-btn') {
+            b.classList.remove('active-tab', 'active', 'bg-teal-700', 'text-white');
+          }
+        });
+        
+        // Add active style/class to clicked button
+        btn.classList.add('active-tab', 'active');
+        
+        // Extract selected exercise name cleanly from its text content
+        const exerciseName = btn.textContent.trim().toLowerCase();
+        selectedExercise = exerciseName;
+        console.log('Selected exercise updated to:', selectedExercise);
+      });
+    });
+  }
+
+  // -------------------------------------------------------------
+  // 5. Full Screen Exercise Overlay Toggle Controls
+  // -------------------------------------------------------------
   const launchExerciseBtn = document.querySelector('#launch-exercise-btn');
   const closeOverlayBtn = document.querySelector('#close-overlay');
   const exerciseOverlay = document.querySelector('#exercise-overlay');
 
   if (launchExerciseBtn && exerciseOverlay) {
     launchExerciseBtn.addEventListener('click', () => {
-      console.log('Open Exercise Full Screen button clicked!');
+      console.log(`Launching full screen overlay for exercise: ${selectedExercise}`);
+      
+      // Update overlay title if element exists
+      const overlayTitle = document.querySelector('#overlay-exercise-title');
+      if (overlayTitle) {
+        overlayTitle.textContent = selectedExercise.toUpperCase();
+      }
+
+      // Show overlay by removing hidden class
       exerciseOverlay.classList.remove('exercise-overlay-hidden');
     });
   } else {
