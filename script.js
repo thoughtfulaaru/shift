@@ -104,6 +104,7 @@ document.addEventListener('DOMContentLoaded', () => {
         
         btn.classList.add('active-tab', 'active');
         
+        // Normalize text by removing extra whitespace and lowering case
         const exerciseName = btn.textContent.trim().toLowerCase();
         selectedExercise = exerciseName;
         console.log('Selected exercise updated to:', selectedExercise);
@@ -119,11 +120,11 @@ document.addEventListener('DOMContentLoaded', () => {
   const exerciseOverlay = document.querySelector('#exercise-overlay');
   const overlayGameBox = document.querySelector('.overlay-game-box');
 
-  let taps = 0; // Track taps outside so it persists when rendered
+  let taps = 0; // Track taps for the tap exercise
 
   if (launchExerciseBtn && exerciseOverlay) {
     launchExerciseBtn.addEventListener('click', () => {
-      console.log(`Launching full screen overlay for exercise: ${selectedExercise}`);
+      console.log(`Launching full screen overlay for exercise: "${selectedExercise}"`);
       
       const overlayTitle = document.querySelector('#overlay-exercise-title');
       if (overlayTitle) {
@@ -135,24 +136,24 @@ document.addEventListener('DOMContentLoaded', () => {
 
       // Render interactive content inside the exercise box based on selection
       if (overlayGameBox) {
-        if (selectedExercise.includes('breathe')) {
+        if (selectedExercise.includes('breathe') || selectedExercise.includes('breath')) {
           overlayGameBox.innerHTML = `
             <div style="font-size: 1.2rem; font-weight: bold; color: #0f766e; margin-bottom: 1rem;">Inhale... Exhale...</div>
-            <div class="target-dot" style="animation: pulse 4s infinite alternate;"></div>
+            <div class="target-dot" style="width: 60px; height: 60px; background: var(--primary, #0f766e); border-radius: 50%; margin: 0 auto; animation: pulse 4s infinite alternate;"></div>
             <p style="margin-top: 1rem; color: #64748b; font-size: 0.9rem;">Follow the rhythm of your breath to let the urge pass.</p>
           `;
-        } else if (selectedExercise.includes('look around')) {
+        } else if (selectedExercise.includes('look') || selectedExercise.includes('ground')) {
           overlayGameBox.innerHTML = `
             <div style="font-size: 1.1rem; font-weight: bold; color: #0f766e; margin-bottom: 0.5rem;">Grounding Technique</div>
             <p style="color: #334155; font-size: 0.95rem; line-height: 1.5;">Name 3 things you can see around you right now, and notice their textures and colors.</p>
           `;
-        } else if (selectedExercise.includes('change thought')) {
+        } else if (selectedExercise.includes('thought') || selectedExercise.includes('refram')) {
           overlayGameBox.innerHTML = `
             <div style="font-size: 1.1rem; font-weight: bold; color: #0f766e; margin-bottom: 0.5rem;">Reframing</div>
             <p style="color: #334155; font-size: 0.95rem; line-height: 1.5;">"This urge is temporary. It peaks and then it subsides. I am in control of my next step."</p>
           `;
         } else {
-          // Tap Focus / Default
+          // Tap Focus / Default (catches "tap focus" or any other button)
           overlayGameBox.innerHTML = `
             <div style="font-size: 1.1rem; font-weight: bold; color: #0f766e; margin-bottom: 1rem;">Tap to Reset Focus</div>
             <div class="target-dot" id="focustarget" style="cursor: pointer; width: 60px; height: 60px; background: var(--primary, #0f766e); border-radius: 50%; margin: 0 auto; transition: transform 0.2s;"></div>
@@ -169,7 +170,6 @@ document.addEventListener('DOMContentLoaded', () => {
   // Event Delegation: Listen for clicks anywhere inside the overlay-game-box
   if (overlayGameBox) {
     overlayGameBox.addEventListener('click', (e) => {
-      // Check if the clicked element (or its parent) is our focus target dot
       const targetDot = e.target.closest('#focustarget');
       if (targetDot) {
         taps++;
@@ -202,3 +202,4 @@ document.addEventListener('DOMContentLoaded', () => {
       exerciseOverlay.classList.add('exercise-overlay-hidden');
     });
   }
+});
