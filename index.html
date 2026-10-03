@@ -94,7 +94,10 @@
     <!-- Distraction-Free Full Screen Exercise Overlay -->
     <div id="exercise-overlay" class="exercise-overlay-hidden">
         <div class="overlay-content">
-            <button id="close-overlay">✕ Back to Dashboard</button>
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+                <h3 id="overlay-exercise-title" style="color: #0f766e; margin: 0; font-size: 1.25rem;">EXERCISE</h3>
+                <button id="close-overlay" class="secondary-btn" style="width: auto; padding: 0.5rem 1rem;">✕ Back to Dashboard</button>
+            </div>
             <div id="overlay-game-container" class="overlay-game-box">
                 <!-- Active Exercise Renders Here -->
             </div>

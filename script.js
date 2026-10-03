@@ -9,7 +9,7 @@ const supabaseAnonKey = 'sb_publishable_D5VMx6SOABgyv5Jp1jckHA_IWi2re76'
 
 const supabase = createClient(supabaseUrl, supabaseAnonKey)
 
-// Track currently selected exercise (default to 'breathe')
+// Track currently selected exercise using explicit data-game IDs (default to 'breathe')
 let selectedExercise = 'breathe';
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -32,29 +32,19 @@ document.addEventListener('DOMContentLoaded', () => {
         cost: Number(costInput)
       };
 
-      console.log('Attempting to insert data into Supabase:', habitData);
-
       try {
         const { data, error } = await supabase
           .from('habits') 
           .insert([habitData]);
 
-        if (error) {
-          console.error('Supabase error object:', error);
-          throw error;
-        }
-
-        console.log('Habit data saved successfully:', data);
+        if (error) throw error;
         
         // Hide setup and show dashboard once saved successfully
         document.querySelector('#setup-section')?.classList.add('dashboard-hidden');
         document.querySelector('#main-dashboard')?.classList.remove('dashboard-hidden');
         
-        // Populate the core why reminder banner
         const displayedWhy = document.querySelector('#displayed-why');
-        if (displayedWhy) {
-          displayedWhy.textContent = whyInput;
-        }
+        if (displayedWhy) displayedWhy.textContent = whyInput;
         
       } catch (error) {
         console.error('Error saving data to Supabase:', error.message || error);
@@ -87,9 +77,9 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   // -------------------------------------------------------------
-  // 4. Exercise Tab Selection
+  // 4. Exercise Tab Selection (Strict data-game mapping)
   // -------------------------------------------------------------
-  const exerciseButtons = document.querySelectorAll('.exercise-card button, .game-btn, .exercise-tab, [data-game]');
+  const exerciseButtons = document.querySelectorAll('.game-btn, .exercise-card button, .exercise-tab, [data-game]');
   
   if (exerciseButtons.length > 0) {
     exerciseButtons.forEach((btn) => {
@@ -104,9 +94,8 @@ document.addEventListener('DOMContentLoaded', () => {
         
         btn.classList.add('active-tab', 'active');
         
-        // Normalize text by removing extra whitespace and lowering case
-        const exerciseName = btn.textContent.trim().toLowerCase();
-        selectedExercise = exerciseName;
+        // Grab strict identifier from data-game attribute
+        selectedExercise = btn.getAttribute('data-game') || 'breathe';
         console.log('Selected exercise updated to:', selectedExercise);
       });
     });
@@ -120,45 +109,52 @@ document.addEventListener('DOMContentLoaded', () => {
   const exerciseOverlay = document.querySelector('#exercise-overlay');
   const overlayGameBox = document.querySelector('.overlay-game-box');
 
-  let taps = 0; // Track taps for the tap exercise
+  let taps = 0; // Localized session tap counter
 
   if (launchExerciseBtn && exerciseOverlay) {
     launchExerciseBtn.addEventListener('click', () => {
-      console.log(`Launching full screen overlay for exercise: "${selectedExercise}"`);
+      console.log(`Launching full screen overlay for exercise ID: "${selectedExercise}"`);
       
       const overlayTitle = document.querySelector('#overlay-exercise-title');
       if (overlayTitle) {
-        overlayTitle.textContent = selectedExercise.toUpperCase();
+        const titles = {
+          'breathe': 'BREATHE',
+          'grounding': 'LOOK AROUND',
+          'cbt': 'CHANGE THOUGHT',
+          'focus-game': 'TAP FOCUS'
+        };
+        overlayTitle.textContent = titles[selectedExercise] || 'EXERCISE';
       }
 
-      // Reset taps counter on open
+      // Reset tap counter on open
       taps = 0;
 
-      // Render interactive content inside the exercise box based on selection
+      // Render interactive content using strict equality checks
       if (overlayGameBox) {
-        if (selectedExercise.includes('breathe') || selectedExercise.includes('breath')) {
+        if (selectedExercise === 'breathe') {
           overlayGameBox.innerHTML = `
             <div style="font-size: 1.2rem; font-weight: bold; color: #0f766e; margin-bottom: 1rem;">Inhale... Exhale...</div>
             <div class="target-dot" style="width: 60px; height: 60px; background: var(--primary, #0f766e); border-radius: 50%; margin: 0 auto; animation: pulse 4s infinite alternate;"></div>
             <p style="margin-top: 1rem; color: #64748b; font-size: 0.9rem;">Follow the rhythm of your breath to let the urge pass.</p>
           `;
-        } else if (selectedExercise.includes('look') || selectedExercise.includes('ground')) {
+        } else if (selectedExercise === 'grounding') {
           overlayGameBox.innerHTML = `
             <div style="font-size: 1.1rem; font-weight: bold; color: #0f766e; margin-bottom: 0.5rem;">Grounding Technique</div>
             <p style="color: #334155; font-size: 0.95rem; line-height: 1.5;">Name 3 things you can see around you right now, and notice their textures and colors.</p>
           `;
-        } else if (selectedExercise.includes('thought') || selectedExercise.includes('refram')) {
+        } else if (selectedExercise === 'cbt') {
           overlayGameBox.innerHTML = `
             <div style="font-size: 1.1rem; font-weight: bold; color: #0f766e; margin-bottom: 0.5rem;">Reframing</div>
             <p style="color: #334155; font-size: 0.95rem; line-height: 1.5;">"This urge is temporary. It peaks and then it subsides. I am in control of my next step."</p>
           `;
-        } else {
-          // Tap Focus / Default (catches "tap focus" or any other button)
+        } else if (selectedExercise === 'focus-game') {
           overlayGameBox.innerHTML = `
             <div style="font-size: 1.1rem; font-weight: bold; color: #0f766e; margin-bottom: 1rem;">Tap to Reset Focus</div>
             <div class="target-dot" id="focustarget" style="cursor: pointer; width: 60px; height: 60px; background: var(--primary, #0f766e); border-radius: 50%; margin: 0 auto; transition: transform 0.2s;"></div>
             <p style="margin-top: 1rem; color: #64748b; font-size: 0.9rem;" id="focus-instruction">Tap the dot calmly 5 times. (<span id="tap-count">0</span>/5)</p>
           `;
+        } else {
+          overlayGameBox.innerHTML = `<p style="color: #64748b;">Select an exercise to begin.</p>`;
         }
       }
 
@@ -167,7 +163,7 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
-  // Event Delegation: Listen for clicks anywhere inside the overlay-game-box
+  // Event Delegation for the interactive Tap Focus dot
   if (overlayGameBox) {
     overlayGameBox.addEventListener('click', (e) => {
       const targetDot = e.target.closest('#focustarget');
