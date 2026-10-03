@@ -87,7 +87,7 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   // -------------------------------------------------------------
-  // 4. Exercise Tab Selection (Breathe, Look Around, Change Thought, Tap Focus)
+  // 4. Exercise Tab Selection
   // -------------------------------------------------------------
   const exerciseButtons = document.querySelectorAll('.exercise-card button, .game-btn, .exercise-tab, [data-game]');
   
@@ -112,11 +112,12 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   // -------------------------------------------------------------
-  // 5. Full Screen Exercise Overlay Toggle Controls
+  // 5. Full Screen Exercise Overlay Toggle & Content Renderer
   // -------------------------------------------------------------
   const launchExerciseBtn = document.querySelector('#launch-exercise-btn');
   const closeOverlayBtn = document.querySelector('#close-overlay');
   const exerciseOverlay = document.querySelector('#exercise-overlay');
+  const overlayGameBox = document.querySelector('.overlay-game-box');
 
   if (launchExerciseBtn && exerciseOverlay) {
     launchExerciseBtn.addEventListener('click', () => {
@@ -127,7 +128,47 @@ document.addEventListener('DOMContentLoaded', () => {
         overlayTitle.textContent = selectedExercise.toUpperCase();
       }
 
-      // Explicitly remove the hidden class so display: flex takes effect
+      // Render interactive content inside the exercise box based on selection
+      if (overlayGameBox) {
+        if (selectedExercise.includes('breathe')) {
+          overlayGameBox.innerHTML = `
+            <div style="font-size: 1.2rem; font-weight: bold; color: #0f766e; margin-bottom: 1rem;">Inhale... Exhale...</div>
+            <div class="target-dot" style="animation: pulse 4s infinite alternate;"></div>
+            <p style="margin-top: 1rem; color: #64748b; font-size: 0.9rem;">Follow the rhythm of your breath to let the urge pass.</p>
+          `;
+        } else if (selectedExercise.includes('look around')) {
+          overlayGameBox.innerHTML = `
+            <div style="font-size: 1.1rem; font-weight: bold; color: #0f766e; margin-bottom: 0.5rem;">Grounding Technique</div>
+            <p style="color: #334155; font-size: 0.95rem; line-height: 1.5;">Name 3 things you can see around you right now, and notice their textures and colors.</p>
+          `;
+        } else if (selectedExercise.includes('change thought')) {
+          overlayGameBox.innerHTML = `
+            <div style="font-size: 1.1rem; font-weight: bold; color: #0f766e; margin-bottom: 0.5rem;">Reframing</div>
+            <p style="color: #334155; font-size: 0.95rem; line-height: 1.5;">"This urge is temporary. It peaks and then it subsides. I am in control of my next step."</p>
+          `;
+        } else {
+          // Tap Focus / Default
+          overlayGameBox.innerHTML = `
+            <div style="font-size: 1.1rem; font-weight: bold; color: #0f766e; margin-bottom: 1rem;">Tap to Reset Focus</div>
+            <div class="target-dot" id="focustarget"></div>
+            <p style="margin-top: 1rem; color: #64748b; font-size: 0.9rem;">Tap the dot calmly 5 times.</p>
+          `;
+          const dot = overlayGameBox.querySelector('#focustarget');
+          if (dot) {
+            let taps = 0;
+            dot.addEventListener('click', () => {
+              taps++;
+              dot.style.transform = `scale(${1 + taps * 0.1})`;
+              if (taps >= 5) {
+                dot.style.background = '#10b981';
+                setTimeout(() => { taps = 0; dot.style.transform = 'scale(1)'; dot.style.background = 'var(--primary)'; }, 500);
+              }
+            });
+          }
+        }
+      }
+
+      // Show overlay
       exerciseOverlay.classList.remove('exercise-overlay-hidden');
     });
   } else {
