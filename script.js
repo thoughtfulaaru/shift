@@ -119,6 +119,8 @@ document.addEventListener('DOMContentLoaded', () => {
   const exerciseOverlay = document.querySelector('#exercise-overlay');
   const overlayGameBox = document.querySelector('.overlay-game-box');
 
+  let taps = 0; // Track taps outside so it persists when rendered
+
   if (launchExerciseBtn && exerciseOverlay) {
     launchExerciseBtn.addEventListener('click', () => {
       console.log(`Launching full screen overlay for exercise: ${selectedExercise}`);
@@ -127,6 +129,9 @@ document.addEventListener('DOMContentLoaded', () => {
       if (overlayTitle) {
         overlayTitle.textContent = selectedExercise.toUpperCase();
       }
+
+      // Reset taps counter on open
+      taps = 0;
 
       // Render interactive content inside the exercise box based on selection
       if (overlayGameBox) {
@@ -150,29 +155,45 @@ document.addEventListener('DOMContentLoaded', () => {
           // Tap Focus / Default
           overlayGameBox.innerHTML = `
             <div style="font-size: 1.1rem; font-weight: bold; color: #0f766e; margin-bottom: 1rem;">Tap to Reset Focus</div>
-            <div class="target-dot" id="focustarget"></div>
-            <p style="margin-top: 1rem; color: #64748b; font-size: 0.9rem;">Tap the dot calmly 5 times.</p>
+            <div class="target-dot" id="focustarget" style="cursor: pointer; width: 60px; height: 60px; background: var(--primary, #0f766e); border-radius: 50%; margin: 0 auto; transition: transform 0.2s;"></div>
+            <p style="margin-top: 1rem; color: #64748b; font-size: 0.9rem;" id="focus-instruction">Tap the dot calmly 5 times. (<span id="tap-count">0</span>/5)</p>
           `;
-          const dot = overlayGameBox.querySelector('#focustarget');
-          if (dot) {
-            let taps = 0;
-            dot.addEventListener('click', () => {
-              taps++;
-              dot.style.transform = `scale(${1 + taps * 0.1})`;
-              if (taps >= 5) {
-                dot.style.background = '#10b981';
-                setTimeout(() => { taps = 0; dot.style.transform = 'scale(1)'; dot.style.background = 'var(--primary)'; }, 500);
-              }
-            });
-          }
         }
       }
 
       // Show overlay
       exerciseOverlay.classList.remove('exercise-overlay-hidden');
     });
-  } else {
-    console.warn('Warning: #launch-exercise-btn or #exercise-overlay element could not be found!');
+  }
+
+  // Event Delegation: Listen for clicks anywhere inside the overlay-game-box
+  if (overlayGameBox) {
+    overlayGameBox.addEventListener('click', (e) => {
+      // Check if the clicked element (or its parent) is our focus target dot
+      const targetDot = e.target.closest('#focustarget');
+      if (targetDot) {
+        taps++;
+        targetDot.style.transform = `scale(${1 + taps * 0.1})`;
+        
+        const tapCountSpan = overlayGameBox.querySelector('#tap-count');
+        if (tapCountSpan) {
+          tapCountSpan.textContent = taps;
+        }
+
+        if (taps >= 5) {
+          targetDot.style.background = '#10b981';
+          const instruction = overlayGameBox.querySelector('#focus-instruction');
+          if (instruction) instruction.textContent = "Great job! Focus restored.";
+          
+          setTimeout(() => { 
+            taps = 0; 
+            targetDot.style.transform = 'scale(1)'; 
+            targetDot.style.background = 'var(--primary, #0f766e)'; 
+            if (instruction) instruction.innerHTML = `Tap the dot calmly 5 times. (<span id="tap-count">0</span>/5)`;
+          }, 1000);
+        }
+      }
+    });
   }
 
   if (closeOverlayBtn && exerciseOverlay) {
@@ -181,4 +202,3 @@ document.addEventListener('DOMContentLoaded', () => {
       exerciseOverlay.classList.add('exercise-overlay-hidden');
     });
   }
-});
