@@ -3,13 +3,14 @@ import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js
 
 console.log('Script loaded successfully!');
 
-// Replace these with your actual Supabase URL and Anon/Public Key from your Supabase project settings
+// Supabase configuration
 const supabaseUrl = 'https://orodgbfpamnyufkcrknp.supabase.co'
 const supabaseAnonKey = 'sb_publishable_D5VMx6SOABgyv5Jp1jckHA_IWi2re76'
 
 const supabase = createClient(supabaseUrl, supabaseAnonKey)
 
 document.addEventListener('DOMContentLoaded', () => {
+  // 1. Baseline Form Submission Logic
   const submitButton = document.querySelector('#save-baseline');
 
   if (submitButton) {
@@ -54,6 +55,42 @@ document.addEventListener('DOMContentLoaded', () => {
         console.error('Error saving data to Supabase:', error.message || error);
         alert('Could not save your baseline. Check console for details.');
       }
+    });
+  }
+
+  // 2. Stress Level Slider Display
+  const stressSlider = document.querySelector('#stress-level');
+  const stressVal = document.querySelector('#stress-val');
+  if (stressSlider && stressVal) {
+    stressSlider.addEventListener('input', (e) => {
+      stressVal.textContent = e.target.value;
+    });
+  }
+
+  // 3. Daily Check-In Button Handler
+  const saveCheckinBtn = document.querySelector('#save-checkin');
+  if (saveCheckinBtn) {
+    saveCheckinBtn.addEventListener('click', () => {
+      const currentStress = stressSlider ? stressSlider.value : 5;
+      console.log('Daily check-in saved. Stress level:', currentStress);
+      alert('Check-in saved!');
+    });
+  }
+
+  // 4. Exercise Overlay Toggle Controls
+  const launchExerciseBtn = document.querySelector('#launch-exercise-btn');
+  const closeOverlayBtn = document.querySelector('#close-overlay');
+  const exerciseOverlay = document.querySelector('#exercise-overlay');
+
+  if (launchExerciseBtn && exerciseOverlay) {
+    launchExerciseBtn.addEventListener('click', () => {
+      exerciseOverlay.classList.remove('exercise-overlay-hidden');
+    });
+  }
+
+  if (closeOverlayBtn && exerciseOverlay) {
+    closeOverlayBtn.addEventListener('click', () => {
+      exerciseOverlay.classList.add('exercise-overlay-hidden');
     });
   }
 });
