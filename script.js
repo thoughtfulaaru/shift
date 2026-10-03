@@ -89,26 +89,21 @@ document.addEventListener('DOMContentLoaded', () => {
   // -------------------------------------------------------------
   // 4. Exercise Tab Selection (Breathe, Look Around, Change Thought, Tap Focus)
   // -------------------------------------------------------------
-  // Select all individual exercise picker buttons inside the card
   const exerciseButtons = document.querySelectorAll('.exercise-card button, .game-btn, .exercise-tab, [data-game]');
   
   if (exerciseButtons.length > 0) {
     exerciseButtons.forEach((btn) => {
-      // Skip the main launch button from being treated as a selector tab
       if (btn.id === 'launch-exercise-btn' || btn.id === 'save-checkin' || btn.id === 'save-baseline') return;
 
-      btn.addEventListener('click', (e) => {
-        // Remove active state from other exercise buttons
+      btn.addEventListener('click', () => {
         exerciseButtons.forEach((b) => {
           if (b.id !== 'launch-exercise-btn') {
             b.classList.remove('active-tab', 'active', 'bg-teal-700', 'text-white');
           }
         });
         
-        // Add active style/class to clicked button
         btn.classList.add('active-tab', 'active');
         
-        // Extract selected exercise name cleanly from its text content
         const exerciseName = btn.textContent.trim().toLowerCase();
         selectedExercise = exerciseName;
         console.log('Selected exercise updated to:', selectedExercise);
@@ -127,13 +122,12 @@ document.addEventListener('DOMContentLoaded', () => {
     launchExerciseBtn.addEventListener('click', () => {
       console.log(`Launching full screen overlay for exercise: ${selectedExercise}`);
       
-      // Update overlay title if element exists
       const overlayTitle = document.querySelector('#overlay-exercise-title');
       if (overlayTitle) {
         overlayTitle.textContent = selectedExercise.toUpperCase();
       }
 
-      // Show overlay by removing hidden class
+      // Explicitly remove the hidden class so display: flex takes effect
       exerciseOverlay.classList.remove('exercise-overlay-hidden');
     });
   } else {

@@ -249,11 +249,7 @@ button:active {
 }
 
 /* Distraction-Free Full Screen Overlay Styles */
-.exercise-overlay-hidden {
-    display: none;
-}
-
-.exercise-overlay-active {
+#exercise-overlay {
     position: fixed;
     top: 0;
     left: 0;
@@ -266,6 +262,10 @@ button:active {
     align-items: center;
     padding: 1.5rem;
     box-sizing: border-box;
+}
+
+.exercise-overlay-hidden {
+    display: none !important;
 }
 
 .overlay-content {
@@ -297,19 +297,4 @@ button:active {
     align-items: center;
     justify-content: center;
     box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.2);
-}
-
-.target-dot {
-    width: 50px;
-    height: 50px;
-    background: var(--primary);
-    border-radius: 50%;
-    cursor: pointer;
-    animation: popIn 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-    box-shadow: 0 4px 10px rgba(15, 118, 110, 0.3);
-}
-
-@keyframes popIn {
-    0% { transform: scale(0); }
-    100% { transform: scale(1); }
 }
