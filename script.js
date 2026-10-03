@@ -233,30 +233,23 @@ document.addEventListener('DOMContentLoaded', () => {
               targetDot.textContent = 'Done!';
               if (instruction) instruction.textContent = "Fantastic! Focus successfully restored.";
               
-              setTimeout(() => {
-                exerciseOverlay.classList.add('exercise-overlay-hidden');
-              }, 1200);
-            } else {
-              targetDot.style.background = '#0d9488';
-              moveTargetRandomly();
-            }
-          });
-        }
-      }
+              let focusTimeoutId = null;
+// ... in the click handler:
+if (taps >= 5) {
+  targetDot.style.background = '#10b981';
+  targetDot.textContent = 'Done!';
+  if (instruction) instruction.textContent = "Fantastic! Focus successfully restored.";
+  
+  focusTimeoutId = setTimeout(() => {
+    exerciseOverlay.classList.add('exercise-overlay-hidden');
+  }, 1200);
+}
 
-      // Show overlay
-      exerciseOverlay.classList.remove('exercise-overlay-hidden');
-    });
-  }
-
-  if (closeOverlayBtn && exerciseOverlay) {
-    closeOverlayBtn.addEventListener('click', () => {
-      console.log('Close overlay button clicked!');
-      if (activeInterval) {
-        clearInterval(activeInterval);
-        activeInterval = null;
-      }
-      exerciseOverlay.classList.add('exercise-overlay-hidden');
-    });
-  }
-});
+// In the close button handler:
+if (closeOverlayBtn && exerciseOverlay) {
+  closeOverlayBtn.addEventListener('click', () => {
+    if (activeInterval) clearInterval(activeInterval);
+    if (focusTimeoutId) clearTimeout(focusTimeoutId);  // <-- Add this
+    exerciseOverlay.classList.add('exercise-overlay-hidden');
+  });
+}
