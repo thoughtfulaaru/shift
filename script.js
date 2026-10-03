@@ -77,19 +77,23 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
-  // 4. Exercise Overlay Toggle Controls
+  // 4. Exercise Overlay Toggle Controls (with debugging logs)
   const launchExerciseBtn = document.querySelector('#launch-exercise-btn');
   const closeOverlayBtn = document.querySelector('#close-overlay');
   const exerciseOverlay = document.querySelector('#exercise-overlay');
 
   if (launchExerciseBtn && exerciseOverlay) {
     launchExerciseBtn.addEventListener('click', () => {
+      console.log('Open Exercise Full Screen button clicked!');
       exerciseOverlay.classList.remove('exercise-overlay-hidden');
     });
+  } else {
+    console.warn('Warning: #launch-exercise-btn or #exercise-overlay element could not be found!');
   }
 
   if (closeOverlayBtn && exerciseOverlay) {
     closeOverlayBtn.addEventListener('click', () => {
+      console.log('Close overlay button clicked!');
       exerciseOverlay.classList.add('exercise-overlay-hidden');
     });
   }
